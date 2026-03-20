@@ -17,7 +17,7 @@ class TaskRepositoryImpl: TaskRepositoryProtocol {
     
     func fetchTasks() throws -> [TaskEntity] {
         let descriptor = FetchDescriptor<TaskDataModel>(
-            predicate: #Predicate {$0.parentTask == nil}
+            predicate: #Predicate {$0.parentTask == nil},
             sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
         )
         let dataModels = try modelContext.fetch(descriptor)

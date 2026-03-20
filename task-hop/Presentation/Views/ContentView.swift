@@ -8,14 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var authViewModel: AuthViewModel = AuthViewModel(authRepository: GoogleAuthRepositoryImpl())
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group {
+            if authViewModel.isLoading {
+                ProgressView("Logging in...")
+            } else if authViewModel.currentUser != nil {
+                MainTabView()
+            } else {
+                SignInView()
+            }
         }
-        .padding()
+        .task {
+            await authViewModel.checkExistingSession()
+        }
     }
 }
 
