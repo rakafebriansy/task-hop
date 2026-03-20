@@ -17,7 +17,7 @@ struct ContentView: View {
             } else if authViewModel.currentUser != nil {
                 MainTabView()
             } else {
-                SignInView()
+                SignInView(authViewModel: authViewModel)
             }
         }
         .task {
@@ -26,6 +26,6 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    ContentView()
-}
+//#Preview {
+//    ContentView()
+//}
