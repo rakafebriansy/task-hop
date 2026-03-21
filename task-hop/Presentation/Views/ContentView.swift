@@ -10,14 +10,20 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var authViewModel: AuthViewModel = AuthViewModel(authRepository: GoogleAuthRepositoryImpl())
     
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding: Bool = false
+    @AppStorage("hasFinishedInitialLogin") private var hasFinishedInitialLogin: Bool = false
+    
     var body: some View {
         Group {
             if authViewModel.isLoading {
-                ProgressView("Logging in...")
-            } else if authViewModel.currentUser != nil {
-                MainTabView()
+                ProgressView("Preparing workspace...")
+            } else if !hasSeenOnboarding {
+                OnboardingView(hasSeenOnboarding: $hasSeenOnboarding)
+            } else if
+                authViewModel.currentUser == nil && !hasFinishedInitialLogin {
+                InitialLoginView(authViewModel: authViewModel, hasFinishedInitialLogin: $hasFinishedInitialLogin)
             } else {
-                SignInView(authViewModel: authViewModel)
+                MainTabView(authViewModel: authViewModel)
             }
         }
         .task {
@@ -26,6 +32,6 @@ struct ContentView: View {
     }
 }
 
-//#Preview {
-//    ContentView()
-//}
+#Preview {
+    ContentView()
+}

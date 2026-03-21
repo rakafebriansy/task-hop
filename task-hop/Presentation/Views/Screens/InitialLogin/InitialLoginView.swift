@@ -8,9 +8,9 @@
 import SwiftUI
 import Combine
 
-public struct SignInView: View {
-    
+public struct InitialLoginView: View {
     @ObservedObject var authViewModel: AuthViewModel
+    @Binding var hasFinishedInitialLogin: Bool
     
     public var body: some View {
         VStack {
@@ -45,27 +45,44 @@ public struct SignInView: View {
                 Button(action: {
                     Task {
                         await authViewModel.signIn()
+                        
+                        if(authViewModel.currentUser != nil) {
+                            hasFinishedInitialLogin = true
+                        }
                     }
                 }) {
                     HStack{
                         Image("icGoogle")
                         Text("Continue with Google")
+                            .fontWeight(.semibold)
                             .foregroundColor(Color(hex: "#111827"))
                         
                     }                                    }
                 .frame(maxWidth: .infinity)
-                .padding()
+                .padding(.vertical, 20)
                 .background(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 99))
                 .padding(.top, 20)
-                .shadow(color: Color(hex: "#22C55E").opacity(0.25), radius: 20, x: 0, y: 8)
-                Text("By continuing, you agree to TaskHop's Privacy Policy and Data Policy.")
-                    .font(.footnote)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(Color(hex: "#374151"))
-                    .padding(.horizontal)
+                .shadow(color: Color(hex: "#22C55E").opacity(0.25), radius: 20, x: 0, y: 4)
+                HStack {
+                    VStack { Divider() }
+                    Text("OR")
+                        .font(.caption)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.gray.opacity(0.6))
+                        .padding(.horizontal, 8)
+                    VStack { Divider() }
+                }.padding(.vertical, 4)
+                Button(action: {
+                    withAnimation (.easeInOut(duration: 0.5)){
+                        hasFinishedInitialLogin = true
+                    }
+                }) {
+                    Text("Maybe later, continue without signing in")
+                        .font(.callout)
+                        .foregroundStyle(.gray)
+                        .underline()
+                }
             }
             .padding(.horizontal, 24)
         }
@@ -73,5 +90,5 @@ public struct SignInView: View {
 }
 
 #Preview {
-    ContentView()
+    InitialLoginView(authViewModel: AuthViewModel(authRepository: GoogleAuthRepositoryImpl()), hasFinishedInitialLogin: .constant(false))
 }

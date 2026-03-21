@@ -30,6 +30,7 @@ struct FeatureCardView: View {
             Text(self.title)
                 .font(.callout)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
                 .fontWeight(.semibold)
                 .foregroundStyle(Color(hex: "#374151"))
         }

@@ -8,7 +8,27 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding: Bool = false
+    @AppStorage("hasFinishedInitialLogin") private var hasFinishedInitialLogin: Bool = false
+    @ObservedObject var authViewModel: AuthViewModel
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(spacing: 20) {
+            Text("Ini Halaman Main Tab View (Beranda)")
+                .font(.headline)
+            Button(action: {
+                hasSeenOnboarding = false
+                hasFinishedInitialLogin = false
+                Task {
+                    await authViewModel.signOut()
+                }
+            }) {
+                Text("DEV: Reset App & Logout")
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.red)
+                    .cornerRadius(10)
+            }
+        }
     }
 }
