@@ -41,15 +41,25 @@ class GoogleAuthRepositoryImpl: AuthRepositoryProtocol {
     }
     
     func getCurrentUser() async throws -> ProfileEntity? {
-        guard let user = GIDSignIn.sharedInstance.currentUser else {
-            return nil
+            guard GIDSignIn.sharedInstance.hasPreviousSignIn() else {
+                return nil
+            }
+            
+            do {
+                try await GIDSignIn.sharedInstance.restorePreviousSignIn()
+                
+                guard let user = GIDSignIn.sharedInstance.currentUser else {
+                    return nil
+                }
+                
+                return ProfileEntity(
+                    id: user.userID ?? UUID().uuidString,
+                    name: user.profile?.name ?? "Unnamed",
+                    email: user.profile?.email ?? "No email",
+                    profileImageUrl: user.profile?.imageURL(withDimension: 200)
+                )
+            } catch {
+                return nil
+            }
         }
-        
-        return ProfileEntity(
-            id: user.userID ?? UUID().uuidString,
-            name: user.profile?.name ?? "Unnamed",
-            email: user.profile?.email ?? "No email",
-            profileImageUrl: user.profile?.imageURL(withDimension: 200)
-        )
-    }
 }
