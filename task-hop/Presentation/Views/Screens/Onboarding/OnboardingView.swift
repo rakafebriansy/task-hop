@@ -11,20 +11,20 @@ struct OnboardingView: View {
     @Binding var hasSeenOnboarding: Bool
     @State private var currentPage: Int = 0
     
-    let pages: [OnboardingInfo] = [
-        OnboardingInfo(
+    let pages: [OnboardingProps] = [
+        OnboardingProps(
             title: "Master Your Time",
             description: "Organize tasks efficiently using the Eisenhower Matrix and watch your productivity evolve.",
             image: "illPepeFocus",
             gradientColors: [Color(hex: "#A8D38E"), Color(hex: "#71BB88")]
         ),
-        OnboardingInfo(
+        OnboardingProps(
             title: "Prioritize Tasks",
             description: "Separate the urgent from the important. Focus only on what truly matters for your goals.",
             image: "illPepePrioritize",
             gradientColors: [Color(hex: "#8ECAE6"), Color(hex: "#219EBC")]
         ),
-        OnboardingInfo(
+        OnboardingProps(
             title: "Achieve Streaks",
             description: "Build a consistent habit, complete tasks daily, and watch Pepe celebrate your success.",
             image: "illPepeAchieve",

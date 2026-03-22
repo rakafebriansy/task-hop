@@ -10,13 +10,11 @@ import SwiftUI
 struct CheckListView: View {
     
     let doFirst = Array(TaskDataModel.dummyTasks[0...2])
-    
     let scheduled = Array(TaskDataModel.dummyTasks[3...4])
-    
     let delegated = Array(TaskDataModel.dummyTasks[5...6])
-    
     let eliminate = Array(TaskDataModel.dummyTasks[7...8])
     
+    @State private var isShowAddTaskForm = false
     
     var body: some View {
             VStack(spacing: 0) {
@@ -40,7 +38,9 @@ struct CheckListView: View {
                     .background(Color(hex: "#E6F7FF"))
                     .clipShape(RoundedRectangle(cornerRadius: 24))
                     Spacer()
-                    Button(action: {}) {
+                    Button(action: {
+                        isShowAddTaskForm = true
+                    }) {
                         Image(systemName: "plus")
                             .padding()
                             .frame(width: 32, height: 32)
@@ -66,6 +66,11 @@ struct CheckListView: View {
                     .padding(.horizontal, 16)
                     .padding(.bottom, 16)
                 }
+            }
+            .sheet(isPresented: $isShowAddTaskForm) {
+                AddTaskView()
+                    .presentationDetents([.large])
+                    .presentationCornerRadius(24)
             }
     }
 }
