@@ -130,7 +130,7 @@ struct OnboardingView: View {
             .shadow(color: Color(hex: "#22C55E").opacity(0.3), radius: 24, x: 0, y: 12)
             
         }
-        .padding(.horizontal, 24)
+        .padding(.horizontal, 16)
     }
 }
 

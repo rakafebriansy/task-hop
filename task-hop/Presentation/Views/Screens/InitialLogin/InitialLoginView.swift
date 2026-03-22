@@ -33,7 +33,7 @@ public struct InitialLoginView: View {
                     FeatureCardView(title: "Prioritize effortlessly using the Eisenhower Matrix.", image: "icloud.and.arrow.up", fgColorHex: "#2563EB", bgColorHex: "#DBEAFE")
                 }
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 16)
             Spacer()
             VStack (spacing: 16) {
                 if let error = authViewModel.appError?.message {
@@ -84,7 +84,7 @@ public struct InitialLoginView: View {
                         .underline()
                 }
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 16)
         }
     }
 }
