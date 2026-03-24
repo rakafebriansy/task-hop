@@ -16,10 +16,11 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Home", systemImage: "checklist")
                 }
-            Text("Halaman Kalender")
+            CalendarView()
                 .tabItem {
                     Label("Calendar", systemImage: "calendar")
                 }
+            
             ProfileView(authViewModel: authViewModel)
                 .tabItem {
                     Label("Profile", systemImage: "person.crop.circle")                }

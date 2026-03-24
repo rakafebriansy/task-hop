@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 @Model
 class TaskDataModel {
@@ -17,11 +18,34 @@ class TaskDataModel {
     var isImportant: Bool
     var isCompleted: Bool
     var createdAt: Date
+    var parentTask: TaskDataModel?
     
     @Relationship(deleteRule: .cascade, inverse: \TaskDataModel.parentTask)
     var subTasks: [TaskDataModel]? = []
     
-    var parentTask: TaskDataModel?
+    var color: Color {
+        if isUrgent && isImportant {
+            return Color(hex: "#28C76F") // Do First (Green)
+        } else if !isUrgent && isImportant {
+            return Color(hex: "#2563EB") // Schedule (Blue)
+        } else if isUrgent && !isImportant {
+            return Color(hex: "#D97706") // Delegate (Orange)
+        } else {
+            return Color(hex: "#6B7280") // Eliminate (Gray)
+        }
+    }
+    
+    var iconName: String {
+        if isUrgent && isImportant {
+            return "bolt.fill"
+        } else if !isUrgent && isImportant {
+            return "calendar"
+        } else if isUrgent && !isImportant {
+            return "person.2.fill"
+        } else {
+            return "trash.fill"
+        }
+    }
     
     init(id: UUID = UUID(), title: String, dueDate: Date? = nil, isUrgent: Bool, isImportant: Bool, isCompleted: Bool = false, createdAt: Date = Date()) {
         self.id = id

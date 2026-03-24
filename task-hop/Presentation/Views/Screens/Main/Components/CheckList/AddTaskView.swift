@@ -48,7 +48,9 @@ struct AddTaskView: View {
                                 .tint(Color(hex: "#15803D"))
                         }
                         InputFieldView(title: "Add Photo", icon: "photo") {
-                            Button(action: {}) {
+                            Button(action: {
+                                //TODO: add photo handler
+                            }) {
                                 Image(systemName: "plus")
                                     .resizable()
                                     .padding()
@@ -59,7 +61,9 @@ struct AddTaskView: View {
                             }
                         }
                         InputFieldView(title: "Add Document", icon: "text.document") {
-                            Button(action: {}) {
+                            Button(action: {
+                                //TODO: add doc handler
+                            }) {
                                 Image(systemName: "plus")
                                     .resizable()
                                     .padding()
@@ -83,7 +87,7 @@ struct AddTaskView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
-                        // TODO: LOGIC SAVE
+                        // TODO: Save task into swiftdata
                         dismiss()
                     }
                     .fontWeight(.bold)

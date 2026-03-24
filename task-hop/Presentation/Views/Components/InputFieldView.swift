@@ -19,26 +19,24 @@ struct InputFieldView<Content:View>: View {
     }
     
     var body: some View {
-        Button(action: {}) {
-            HStack {
-                HStack (spacing: 14) {
-                    Image(systemName: self.icon)
-                        .padding(8)
-                        .foregroundStyle(.black)
-                        .background(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                    Text(self.title)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.black)
-                }
-                Spacer()
-                actionView
+        HStack {
+            HStack (spacing: 14) {
+                Image(systemName: self.icon)
+                    .padding(8)
+                    .foregroundStyle(.black)
+                    .background(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                Text(self.title)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.black)
             }
-            .padding(16)
-            .frame(maxWidth: .infinity)
-            .background(Color(hex: "#F3F4F6"))
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            Spacer()
+            actionView
         }
+        .padding(16)
+        .frame(maxWidth: .infinity)
+        .background(Color(hex: "#F3F4F6"))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
 
