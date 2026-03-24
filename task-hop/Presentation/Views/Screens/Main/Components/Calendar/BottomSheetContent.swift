@@ -26,7 +26,7 @@ struct BottomSheetContent: View {
     
     private var dateAndTaskCount: String {
         let dateString = selectedDate.formatted(.dateTime.day().month(.wide))
-        return "\(dateString), \(tasksForSelectedDate.count) Today's Tasks"
+        return "\(dateString), \(tasksForSelectedDate.count) Tasks"
     }
     
     static let timeFormatter: DateFormatter = {

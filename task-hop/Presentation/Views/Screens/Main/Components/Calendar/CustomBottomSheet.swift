@@ -14,7 +14,7 @@ enum SheetState {
 
 struct CustomBottomSheet<Content: View>: View {
     @Binding var sheetState: SheetState
-    @GestureState private var dragOffset: CGFloat = 0
+    @State private var dragTranslation: CGFloat = 0
     
     let content: Content
     
@@ -24,10 +24,13 @@ struct CustomBottomSheet<Content: View>: View {
     }
     
     private var currentOffset: CGFloat {
-        let baseOffset: CGFloat = sheetState == .collapsed ? (screenHeight * 0.65) : (screenHeight * 0.25)
-        let calculatedOffset = baseOffset + dragOffset
-        return max(calculatedOffset, screenHeight * 0.15)
+        let collapsedOffset: CGFloat = screenHeight * 0.65
+        let expandedOffset: CGFloat = screenHeight * 0.25
         
+        let baseOffset: CGFloat = sheetState == .expanded ? expandedOffset : collapsedOffset
+        let calculatedOffset: CGFloat = baseOffset + dragTranslation
+        
+        return min(max(calculatedOffset, expandedOffset), collapsedOffset)
     }
     
     private let minHeight: CGFloat = screenHeight * 0.4
@@ -58,18 +61,20 @@ struct CustomBottomSheet<Content: View>: View {
             .offset(y: currentOffset)
             .gesture(
                 DragGesture()
-                    .updating($dragOffset) {
-                        value, state, _ in
-                        state = value.translation.height
+                    .onChanged {
+                        value in
+                        dragTranslation = value.translation.height
                     }
                     .onEnded{
                         value in
-                        withAnimation {
-                            if value.translation.height > 100 {
-                                self.sheetState = .collapsed
-                            } else if value.translation.height < -100 {
-                                self.sheetState = .expanded
+                        withAnimation (.spring(response: 0.4, dampingFraction: 0.8)) {
+                            if sheetState == .collapsed && value.translation.height < -50 {
+                                sheetState = .expanded
+                            } else if sheetState == .expanded && value.translation.height > 50 {
+                                sheetState = .collapsed
                             }
+                            
+                            dragTranslation = 0
                         }
                     }
             )
