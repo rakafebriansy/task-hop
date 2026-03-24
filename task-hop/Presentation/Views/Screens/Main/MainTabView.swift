@@ -21,7 +21,7 @@ struct MainTabView: View {
                     Label("Calendar", systemImage: "calendar")
                 }
             
-            ProfileView(authViewModel: authViewModel)
+            ProfileView()
                 .tabItem {
                     Label("Profile", systemImage: "person.crop.circle")                }
         }

@@ -83,8 +83,6 @@ struct CustomBottomSheet<Content: View>: View {
     }
 }
 
-//#Preview {
-//    CustomBottomSheet(sheetState: .constant(.collapsed)) {
-//        Text("Content")
-//    }
-//}
+#Preview {
+    MainTabView(authViewModel: AuthViewModel(authRepository: GoogleAuthRepositoryImpl()))
+}
