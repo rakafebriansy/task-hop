@@ -39,16 +39,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "9F221A88-C87E-42AA-B459-E0CB8DF953B7"
-            shouldBeEnabled = "Yes"
+            uuid = "A817D1DE-C8C8-49F5-8E5C-26918D927EEB"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "task-hop/Presentation/Views/Components/InputFieldView.swift"
+            filePath = "task-hop/Presentation/Views/Components/CustomToast.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "15"
-            endingLineNumber = "15"
-            landmarkName = "init(title:icon:actionView:)"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
+            landmarkName = "ToastModifier"
+            landmarkType = "14">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4B7FB929-19CB-4A4A-9FC8-371EC6A2AA5A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "task-hop/Presentation/Views/Components/CustomToast.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "64"
+            endingLineNumber = "64"
+            landmarkName = "body(content:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

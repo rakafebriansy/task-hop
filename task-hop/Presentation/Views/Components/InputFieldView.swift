@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct InputFieldView<Content:View>: View {
-    let title: String
+struct InputFieldView<TitleContent:View, ActionContent:View>: View {
     let icon: String
-    let actionView: Content
+    let titleView: TitleContent
+    let actionView: ActionContent
     
-    init(title:String, icon: String, @ViewBuilder actionView: () -> Content) {
-        self.title = title
+    init(icon: String, @ViewBuilder title: () -> TitleContent, @ViewBuilder actionView: () -> ActionContent) {
         self.icon = icon
+        self.titleView = title()
         self.actionView = actionView()
     }
     
@@ -26,11 +26,13 @@ struct InputFieldView<Content:View>: View {
                     .foregroundStyle(.black)
                     .background(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-                Text(self.title)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.black)
+                titleView
+                    .lineLimit(1)
+                    .truncationMode(.tail)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             Spacer()
+            
             actionView
         }
         .padding(16)
@@ -40,8 +42,21 @@ struct InputFieldView<Content:View>: View {
     }
 }
 
+extension InputFieldView where TitleContent == Text {
+    init(title: String, icon: String, @ViewBuilder actionView: () -> ActionContent) {
+        self.icon = icon
+        self.actionView = actionView()
+        
+        self.titleView = Text(title)
+            .fontWeight(.semibold)
+            .foregroundStyle(.black)
+    }
+}
+
 #Preview {
-    InputFieldView(title: "Due Date", icon: "calendar") {
+    InputFieldView(icon: "calendar", title: {
+        Text("Due Date")
+    }) {
         HStack (spacing: 10) {
             Text("Today")
                 .fontWeight(.semibold)

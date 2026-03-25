@@ -79,6 +79,6 @@ struct CalendarGridView: View {
     }
 }
 
-//#Preview {
-//    CalendarGridView()
-//}
+#Preview {
+    CalendarGridView(selectedDate: .constant(Date()), currentDate: Date(), tasks: TaskDataModel.dummyTasks)
+}
