@@ -12,19 +12,24 @@ struct CalendarGridView: View {
     
     let currentDate: Date
     let tasks: [TaskDataModel]
+    let firstDayOfWeek: Int = 2
+    private let defaultWeekdays = ["S", "M", "T", "W", "T", "F", "S"]
     
-    private let calendar = Calendar.current
-    private let weekdays = ["M", "T", "W", "T", "F", "S", "S"]
+    private var weekdays: [String] {
+        let index = firstDayOfWeek - 1
+        let start = Array(defaultWeekdays[index...])
+        let end = Array(defaultWeekdays[0..<index])
+        return start + end
+    }
     private var daysInMonth: [Date?] {
         var calendar = Calendar.current
-        calendar.firstWeekday = 2
+        calendar.firstWeekday = firstDayOfWeek
         
         let components = calendar.dateComponents([.year, .month], from: currentDate)
-        guard let firstDayOfMonth = calendar.date(from: components) else { return [] }
+        guard let firstDayOfMonth = calendar.date(from: components),
+              let range = calendar.range(of: .day, in: .month, for: firstDayOfMonth) else { return [] }
         
-        guard let range = calendar.range(of: .day, in: .month, for: firstDayOfMonth) else { return [] }
         let totalDays = range.count
-        
         let firstWeekday = calendar.component(.weekday, from: firstDayOfMonth)
         var offset = firstWeekday - calendar.firstWeekday
         if offset < 0 { offset += 7 }
@@ -40,25 +45,27 @@ struct CalendarGridView: View {
         return days
     }
     
+    private var localCalendar: Calendar {
+        var cal = Calendar.current
+        cal.firstWeekday = firstDayOfWeek
+        return cal
+    }
+    
     var body: some View {
         VStack {
-            HStack {
-                ForEach(weekdays, id: \.self) {
-                    day in
-                    Text(day)
-                        .frame(maxWidth: .infinity)
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 10) {
+                ForEach(0..<weekdays.count, id: \.self) { index in
+                    Text(weekdays[index])
+                        .font(.subheadline)
                         .foregroundStyle(.gray)
                 }
-            }
-            
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 10) {
                 ForEach(0..<daysInMonth.count, id: \.self) {
                     index in
                     if let date = daysInMonth[index] {
-                        DayView(date: date, isSelected: calendar.isDate(date, inSameDayAs: selectedDate), taskForDate: tasks.filter {
+                        DayView(date: date, isSelected: localCalendar.isDate(date, inSameDayAs: selectedDate), taskForDate: tasks.filter {
                             task in
                             if let safeDate = task.dueDate {
-                                return calendar.isDate(safeDate, inSameDayAs: date)
+                                return localCalendar.isDate(safeDate, inSameDayAs: date)
                             }
                             return false
                         })
