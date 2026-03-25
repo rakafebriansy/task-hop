@@ -14,6 +14,10 @@ struct TaskEntity: Identifiable {
     var isUrgent: Bool
     var isImportant: Bool
     var isCompleted: Bool
+    var isAlarmEnabled: Bool
+    var photoData: Data?
+    var documentData: Data?
+    var documentFilename: String?
     var createdAt: Date
     
     var subTasks: [TaskEntity]

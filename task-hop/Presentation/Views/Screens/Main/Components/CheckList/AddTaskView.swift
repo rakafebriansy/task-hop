@@ -12,11 +12,13 @@ import UniformTypeIdentifiers
 
 struct AddTaskView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) private var modelContext
+    
+    @Query private var existingTasks: [TaskDataModel]
+    private var viewModel = AddTaskViewModel()
     
     @State private var showToast: Bool = false
     @State private var toastMessage: String = ""
-    
-    @Query private var existingTasks: [TaskDataModel]
     
     @State private var title: String = ""
     @State private var dueDate: Date = Date()
@@ -26,7 +28,7 @@ struct AddTaskView: View {
     
     @State private var selectedPhotoItem: PhotosPickerItem? = nil
     @State private var selectedPhotoData: Data? = nil
-    @State private var photoFilename: String?
+    @State private var photoFilename: String? = nil
     
     @State private var showDocumentPicker: Bool = false
     @State private var selectedDocumentURL: URL? = nil
@@ -39,6 +41,7 @@ struct AddTaskView: View {
                     TextField("e.g., Buy coffee tomorrow at 9 AM", text: $title)
                         .font(.system(size: 26, weight: .bold))
                         .textFieldStyle(.plain)
+                        .padding(.top, 16)
                     VStack(alignment: .leading, spacing: 8) {
                         Text("PRIORITY & URGENCY")
                             .fontWeight(.semibold)
@@ -84,7 +87,7 @@ struct AddTaskView: View {
                         }) {
                             HStack(alignment: .center, spacing: 16) {
                                 PhotosPicker(selection: $selectedPhotoItem, matching: .images, photoLibrary: .shared()) {
-                                    if let selectedPhotoData, let uiImage = UIImage(data: selectedPhotoData) {
+                                    if let imageData = selectedPhotoData, let uiImage = UIImage(data: imageData) {
                                         ZStack {
                                             Image(uiImage: uiImage)
                                                 .resizable()
@@ -130,10 +133,9 @@ struct AddTaskView: View {
                                                 }
                                             }
                                         } catch {
-                                            print("Failed to load image: \(error.localizedDescription)")
-                                            toastMessage = "Failed to load image."
-                                            withAnimation(.spring()) {
-                                                showToast = true
+                                            self.toastMessage = "Failed to load image: \(error.localizedDescription)"
+                                            withAnimation(.spring()){
+                                                self.showToast = true
                                             }
                                         }
                                     }
@@ -237,16 +239,39 @@ struct AddTaskView: View {
                     Button("Cancel") {
                         dismiss()
                     }
-                    .foregroundStyle(Color(hex: "#6B7280"))
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
-                        // TODO: Save task into swiftdata
-                        dismiss()
+                        print("clicked")
+                        let haptic = UINotificationFeedbackGenerator()
+                        haptic.prepare()
+                        
+                        do {
+                            try viewModel.saveTask(
+                                context: modelContext,
+                                title: title,
+                                dueDate: dueDate,
+                                selectedQuadrant: selectedQuadrant,
+                                isAlarmEnabled: isAlarmEnabled,
+                                selectedParent: selectedParent,
+                                selectedPhotoData: selectedPhotoData,
+                                documentFilename: documentFilename,
+                                selectedDocumentURL: selectedDocumentURL
+                            )
+                            
+                            haptic.notificationOccurred(.success)
+                            print("clicked 2")
+                            dismiss()
+                        } catch {
+                            self.toastMessage = "Failed to save task: \(error.localizedDescription)"
+                            withAnimation(.spring()){
+                                self.showToast = true
+                            }
+                        }
+                        print("clicked 3")
                     }
                     .fontWeight(.bold)
-                    .foregroundStyle(Color(hex: "#15803D"))
-                    .disabled(title.isEmpty)
+                    .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
         }
