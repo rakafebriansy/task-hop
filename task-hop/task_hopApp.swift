@@ -6,10 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 import GoogleSignIn
 
 @main
 struct task_hopApp: App {
+    init() {
+        print("App running...")
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -17,6 +22,10 @@ struct task_hopApp: App {
                     url in
                     GIDSignIn.sharedInstance.handle(url)
                 }
+                .onAppear {
+                    print("Content has been rendered")
+                }
         }
+        .modelContainer(for: TaskDataModel.self)
     }
 }

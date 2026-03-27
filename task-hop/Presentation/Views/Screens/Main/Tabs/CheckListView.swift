@@ -6,15 +6,34 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CheckListView: View {
     
-    let doFirst = Array(TaskDataModel.dummyTasks[0...2])
-    let scheduled = Array(TaskDataModel.dummyTasks[3...4])
-    let delegated = Array(TaskDataModel.dummyTasks[5...6])
-    let eliminate = Array(TaskDataModel.dummyTasks[7...8])
+    @Query(sort: \TaskDataModel.createdAt, order: .reverse) private var allTasks: [TaskDataModel]
     
     @State private var isShowAddTaskForm = false
+    
+    private var doFirstTasks: [TaskDataModel] {
+        allTasks.filter {
+            $0.isUrgent && $0.isImportant
+        }
+    }
+    private var scheduleTasks: [TaskDataModel] {
+        allTasks.filter {
+            !$0.isUrgent && $0.isImportant
+        }
+    }
+    private var delegateTasks: [TaskDataModel] {
+        allTasks.filter {
+            $0.isUrgent && !$0.isImportant
+        }
+    }
+    private var eliminateTasks: [TaskDataModel] {
+        allTasks.filter {
+            !$0.isUrgent && !$0.isImportant
+        }
+    }
     
     var body: some View {
             VStack(spacing: 0) {
@@ -58,10 +77,10 @@ struct CheckListView: View {
                 
                 ScrollView {
                     VStack (spacing: 20) {
-                        EisenhowerSectionView(tasks:doFirst, title: "Do First", icon:"bolt",fgColor: Color(hex: "#28C76F"))
-                        EisenhowerSectionView(tasks:scheduled, title: "Schedule",icon:"calendar.badge.clock",fgColor: Color(hex: "#2563EB"))
-                        EisenhowerSectionView(tasks:delegated, title: "Delegate",icon:"person.2",fgColor: Color(hex: "#D97706"))
-                        EisenhowerSectionView(tasks:delegated, title: "Eliminate",icon:"xmark.circle",fgColor: Color(hex: "#6B7280"))
+                        EisenhowerSectionView(tasks:doFirstTasks, title: "Do First", icon:"bolt",fgColor: Color(hex: "#28C76F"))
+                        EisenhowerSectionView(tasks:scheduleTasks, title: "Schedule",icon:"calendar.badge.clock",fgColor: Color(hex: "#2563EB"))
+                        EisenhowerSectionView(tasks:delegateTasks, title: "Delegate",icon:"person.2",fgColor: Color(hex: "#D97706"))
+                        EisenhowerSectionView(tasks:eliminateTasks, title: "Eliminate",icon:"xmark.circle",fgColor: Color(hex: "#6B7280"))
                     }
                     .padding(.horizontal, 16)
                     .padding(.bottom, 16)
